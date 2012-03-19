@@ -1,8 +1,11 @@
 #!/bin/bash
 
 JUDGE=bin/judge
+COMPILE=bin/compile
 PROBLEMS="liz lol omg"
+SOLUTIONS_DIR=solutions
 
 for problem in $PROBLEMS; do
+  $COMPILE $SOLUTIONS_DIR/$problem/$problem.cpp $problem
   $JUDGE $problem
 done

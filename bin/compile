@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SRC_FILE=$1
+PROGRAM_NAME=$2
+TMP_DIR=tmp
+
+outfile=$TMP_DIR/$PROGRAM_NAME
+
+if [ ! -a $outfile ]; then
+  exit 1
+fi
+
+g++ -o $outfile $SRC_FILE
