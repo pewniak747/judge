@@ -1,0 +1,55 @@
+#!/bin/bash
+
+TIMELIMIT=1
+FILES=""
+RESULT=0
+PROGRAM_NAME=$1
+PROGRAM_DIR="problems/$PROGRAM_NAME"
+PROGRAM="$PROGRAM_DIR/$PROGRAM_NAME"
+IN_DIR="$PROGRAM_DIR/in"
+OUT_DIR="$PROGRAM_DIR/out"
+TMP_DIR=tmp
+
+shift
+for file in $@; do
+  FILES="$FILES $file"
+done
+
+if [[ $FILES == "" ]]; then
+  FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
+fi
+
+for file in $FILES; do
+  infile=$IN_DIR/$file
+  outfile=`echo $OUT_DIR/${file/.in/.out}`
+  tempoutfile="$TMP_DIR/$file.tmp"
+  tempfile=$TMP_DIR/tmp
+  /usr/bin/time -o $tempfile -f "%U" $PROGRAM < $infile > $tempoutfile
+  time=`cat $tempfile`
+  diff -q $outfile $tempoutfile > /dev/null
+  if [ $? -eq '0' ]; then
+    result=AC
+  else
+    result=WA
+  fi
+  if [[ $TIMELIMIT != 0 ]]; then
+    if [[ $TIMELIMIT < $time ]]; then
+      result=TLE
+    fi
+  fi
+  if [[ $result != 'AC' ]]; then
+    color=31m
+  else
+    color=32m
+  fi
+  printf "\033[$color[$result]\033[0m\t$file - $time s\n"
+  if [[ $RESULT == 0 ]]; then
+    if [[ $result == WA ]]; then RESULT=1; fi
+    if [[ $result == TLE ]]; then RESULT=2; fi
+  fi
+done
+
+# cleanup
+rm $TMP_DIR/*
+
+exit $RESULT

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+JUDGE=bin/judge
+PROBLEMS="liz"
+
+for problem in $PROBLEMS; do
+  $JUDGE $problem
+done
