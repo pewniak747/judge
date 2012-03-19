@@ -10,6 +10,13 @@ IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
 TMP_DIR=tmp
 
+echo "checking [$PROGRAM_NAME]"
+if [ ! -x $PROGRAM ]; then
+  echo "program not found!"
+  echo
+  exit 3
+fi
+
 shift
 for file in $@; do
   FILES="$FILES $file"
@@ -48,6 +55,7 @@ for file in $FILES; do
     if [[ $result == TLE ]]; then RESULT=2; fi
   fi
 done
+echo 
 
 # cleanup
 rm $TMP_DIR/*
