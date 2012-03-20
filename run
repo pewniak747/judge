@@ -3,7 +3,7 @@
 JUDGE=bin/judge
 COMPILE=bin/compile
 CLEANUP=bin/cleanup
-PROBLEMS="liz lol omg"
+PROBLEMS="liz sum"
 SOLUTIONS_DIR=solutions
 
 for problem in $PROBLEMS; do

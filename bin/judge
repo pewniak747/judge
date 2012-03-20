@@ -3,12 +3,12 @@
 TIMELIMIT=1
 FILES=""
 RESULT=0
+TMP_DIR=tmp
 PROGRAM_NAME=$1
 PROGRAM_DIR="problems/$PROGRAM_NAME"
-PROGRAM="$PROGRAM_DIR/$PROGRAM_NAME"
+PROGRAM="$TMP_DIR/$PROGRAM_NAME"
 IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
-TMP_DIR=tmp
 CLEANUP=bin/cleanup
 
 echo "checking [$PROGRAM_NAME]"
@@ -18,10 +18,7 @@ if [ ! -x $PROGRAM ]; then
   exit 3
 fi
 
-shift
-for file in $@; do
-  FILES="$FILES $file"
-done
+source $PROGRAM_DIR/$PROGRAM_NAME.conf
 
 if [[ $FILES == "" ]]; then
   FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
