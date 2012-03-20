@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [[ -z tmp/* ]]; then
+  rm tmp/*
+fi

@@ -3,6 +3,7 @@
 SRC_FILE=$1
 PROGRAM_NAME=$2
 TMP_DIR=tmp
+CLEANUP=bin/cleanup
 
 outfile=$TMP_DIR/$PROGRAM_NAME
 

@@ -9,6 +9,7 @@ PROGRAM="$PROGRAM_DIR/$PROGRAM_NAME"
 IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
 TMP_DIR=tmp
+CLEANUP=bin/cleanup
 
 echo "checking [$PROGRAM_NAME]"
 if [ ! -x $PROGRAM ]; then
@@ -58,6 +59,6 @@ done
 echo 
 
 # cleanup
-rm $TMP_DIR/*
+$CLEANUP
 
 exit $RESULT

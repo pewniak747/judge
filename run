@@ -2,6 +2,7 @@
 
 JUDGE=bin/judge
 COMPILE=bin/compile
+CLEANUP=bin/cleanup
 PROBLEMS="liz lol omg"
 SOLUTIONS_DIR=solutions
 
@@ -9,5 +10,8 @@ for problem in $PROBLEMS; do
   $COMPILE $SOLUTIONS_DIR/$problem/$problem.cpp $problem
   if [[ $? == 0 ]]; then
     $JUDGE $problem
+  else
+    echo
+    $CLEANUP
   fi
 done
