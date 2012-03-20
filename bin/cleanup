@@ -1,5 +1,5 @@
 #!/bin/bash
 
-if [[ -z tmp/* ]]; then
+if [[ ! -z tmp/* ]]; then
   rm tmp/*
 fi
