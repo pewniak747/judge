@@ -11,7 +11,6 @@ if [ ! -d $TMP_DIR ]; then
   mkdir $TMP_DIR
 fi
 
-echo "compiling [$PROGRAM_NAME]"
 if [ ! -e $SRC_FILE ]; then
   echo "source not found!"
   echo
