@@ -1,0 +1,3 @@
+PROBLEM: compute a sum of two integers
+INPUT: two numbers: 0 < a, b < 100
+OUTPUT: sum of a and b
