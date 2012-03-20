@@ -7,5 +7,7 @@ SOLUTIONS_DIR=solutions
 
 for problem in $PROBLEMS; do
   $COMPILE $SOLUTIONS_DIR/$problem/$problem.cpp $problem
-  $JUDGE $problem
+  if [[ $? == 0 ]]; then
+    $JUDGE $problem
+  fi
 done

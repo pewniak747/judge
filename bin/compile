@@ -6,8 +6,11 @@ TMP_DIR=tmp
 
 outfile=$TMP_DIR/$PROGRAM_NAME
 
-if [ ! -a $outfile ]; then
-  exit 1
+echo "compiling [$PROGRAM_NAME]"
+if [ ! -e $SRC_FILE ]; then
+  echo "source not found!"
+  echo
+  exit 3
 fi
 
 g++ -o $outfile $SRC_FILE
