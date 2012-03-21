@@ -5,6 +5,8 @@ COMPILE=bin/compile
 CLEANUP=bin/cleanup
 SOLUTIONS_DIR=solutions
 
+source bin/common
+
 if [[ $PROBLEMS == "" ]]; then
   PROBLEMS=$@
 fi
