@@ -3,8 +3,15 @@
 JUDGE=bin/judge
 COMPILE=bin/compile
 CLEANUP=bin/cleanup
-PROBLEMS="liz sum"
 SOLUTIONS_DIR=solutions
+
+if [[ $PROBLEMS == "" ]]; then
+  PROBLEMS=$@
+fi
+
+if [[ $PROBLEMS == "" ]]; then
+  PROBLEMS=`ls -v -m1 $SOLUTIONS_DIR`
+fi
 
 for problem in $PROBLEMS; do
   $COMPILE $SOLUTIONS_DIR/$problem/$problem.cpp $problem
