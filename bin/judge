@@ -11,8 +11,10 @@ IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
 CLEANUP=bin/cleanup
 
+source bin/common
+
 if [ ! -x $PROGRAM ]; then
-  printf "\033[31m[program not found]\033[0m\t$PROGRAM_NAME\n"
+  red "program not found" $PROGRAM_NAME
   exit 3
 fi
 
@@ -45,23 +47,23 @@ for file in $FILES; do
     fi
   fi
   if [[ $result != 'AC' ]]; then
-    color=31m
+    red $result "$file - $time s"
   else
-    color=32m
+    green $result "$file - $time s"
     ac_count=$[ $ac_count + 1 ]
   fi
-  printf "\033[$color[$result]\033[0m\t$file - $time s\n"
   if [[ $RESULT == 0 ]]; then
     if [[ $result == WA ]]; then RESULT=1; fi
     if [[ $result == TLE ]]; then RESULT=2; fi
   fi
 done
+
 if [[ $ac_count == $test_count ]]; then
-  color=32m
+  green "$ac_count/$test_count" $PROGRAM_NAME
 else
-  color=31m
+  red "$ac_count/$test_count" $PROGRAM_NAME
 fi
-printf "\033[$color[$ac_count/$test_count]\033[0m\t$PROGRAM_NAME\n"
+
 echo 
 
 # cleanup
