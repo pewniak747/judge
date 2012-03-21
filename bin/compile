@@ -12,8 +12,7 @@ if [ ! -d $TMP_DIR ]; then
 fi
 
 if [ ! -e $SRC_FILE ]; then
-  echo "source not found!"
-  echo
+  printf "\033[31m[source not found]\033[0m\t$PROGRAM_NAME\n"
   exit 3
 fi
 

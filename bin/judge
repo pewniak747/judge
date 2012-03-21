@@ -12,8 +12,7 @@ OUT_DIR="$PROGRAM_DIR/out"
 CLEANUP=bin/cleanup
 
 if [ ! -x $PROGRAM ]; then
-  echo "program not found!"
-  echo
+  printf "\033[31m[program not found]\033[0m\t$PROGRAM_NAME\n"
   exit 3
 fi
 
