@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SRC_FILE=$1
+PROGRAM_NAME=`basename $SRC_FILE .cpp`
+BLACKLIST_FILE=conf/blacklist.conf
+
+BLACKLIST=`cat $BLACKLIST_FILE`
+
+cat $BLACKLIST_FILE | while read taboo; do
+  result=`grep -c "$taboo" $SRC_FILE`
+  if [[ $result != "0" ]]; then
+    printf "\033[31m[unacceptable expression: $taboo]\033[0m\t$PROGRAM_NAME\n"
+    exit 1
+  fi
+done

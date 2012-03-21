@@ -4,6 +4,7 @@ SRC_FILE=$1
 PROGRAM_NAME=$2
 TMP_DIR=tmp
 CLEANUP=bin/cleanup
+VERIFY=bin/verify
 
 outfile=$TMP_DIR/$PROGRAM_NAME
 
@@ -16,4 +17,10 @@ if [ ! -e $SRC_FILE ]; then
   exit 3
 fi
 
-g++ -o $outfile $SRC_FILE
+$VERIFY $SRC_FILE
+
+if [[ $? == 0 ]]; then
+  g++ -o $outfile $SRC_FILE
+else
+  exit 1
+fi
