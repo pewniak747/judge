@@ -1,5 +1,6 @@
-conf/blacklist.conf
+conf/*.conf
 problems/**/*
 solutions/**/*
+my_solutions*/**/*
 tmp
 tmp/**/*

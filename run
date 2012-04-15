@@ -4,6 +4,7 @@ JUDGE=bin/judge
 COMPILE=bin/compile
 CLEANUP=bin/cleanup
 SOLUTIONS_DIR=solutions
+PROBLEMS_DIR=problems
 
 source bin/common
 
@@ -12,15 +13,23 @@ if [[ $PROBLEMS == "" ]]; then
 fi
 
 if [[ $PROBLEMS == "" ]]; then
-  PROBLEMS=`ls -v -m1 $SOLUTIONS_DIR`
+  PROBLEMS=`ls -v -m1 $PROBLEMS_DIR`
 fi
 
-for problem in $PROBLEMS; do
-  $COMPILE $SOLUTIONS_DIR/$problem/$problem.cpp $problem
-  if [[ $? == 0 ]]; then
-    $JUDGE $problem
-  else
-    echo
-    $CLEANUP
-  fi
+HOSTS=`cat conf/hosts.conf`
+
+
+for host in $HOSTS; do
+  hostdir=`echo $host | sed 's/:.*//'`
+  mkdir -p $SOLUTIONS_DIR/$hostdir > /dev/null 2>&1
+  rsync -r "$host/" $SOLUTIONS_DIR/$hostdir
+  echo [HOST] $hostdir
+  for problem in $PROBLEMS; do
+    $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
+    if [[ $? == 0 ]]; then
+      $JUDGE $problem
+    else
+      echo
+    fi
+  done
 done
