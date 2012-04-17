@@ -20,7 +20,7 @@ fi
 $VERIFY $SRC_FILE
 
 if [[ $? == 0 ]]; then
-  g++ -o $outfile $SRC_FILE
+  g++ -o $outfile $SRC_FILE > /dev/null 2>&1
 else
   exit 1
 fi

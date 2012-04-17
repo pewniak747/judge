@@ -18,18 +18,34 @@ fi
 
 HOSTS=`cat conf/hosts.conf`
 
-
 for host in $HOSTS; do
   hostdir=`echo $host | sed 's/:.*//'`
   mkdir -p $SOLUTIONS_DIR/$hostdir > /dev/null 2>&1
   rsync -r "$host/" $SOLUTIONS_DIR/$hostdir
   echo [HOST] $hostdir
   for problem in $PROBLEMS; do
+    IN_DIR="problems/$problem/in"
+    OUT_DIR="problems/$problem/out"
+    FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
+    test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
+    ac_count=0
+
     $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
-    if [[ $? == 0 ]]; then
-      $JUDGE $problem
-    else
-      echo
+    if [[ $? == 0 && -x "tmp/$problem" ]]; then
+      for input in $FILES; do
+        $JUDGE $problem $input
+        if [[ $? == 0 ]]; then
+          ac_count=$[ $ac_count + 1 ]
+        fi
+      done
     fi
+    if [[ $ac_count == $test_count ]]; then
+      green "$ac_count/$test_count" $problem
+    else
+      red "$ac_count/$test_count" $problem
+    fi
+    # cleanup
+    $CLEANUP
   done
+  echo
 done

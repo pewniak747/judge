@@ -10,63 +10,38 @@ PROGRAM="$TMP_DIR/$PROGRAM_NAME"
 IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
 CLEANUP=bin/cleanup
+file=$2
 
 source bin/common
-
-if [ ! -x $PROGRAM ]; then
-  red "program not found" $PROGRAM_NAME
-  exit 3
-fi
-
 source $PROGRAM_DIR/$PROGRAM_NAME.conf
 
-FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
-test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
-ac_count=0
-
-for file in $FILES; do
-  infile=$IN_DIR/$file
-  outfile=`echo $OUT_DIR/${file/.in/.out}`
-  tempoutfile="$TMP_DIR/$file.tmp"
-  tempfile=$TMP_DIR/tmp
-  /usr/bin/time -o $tempfile -f "%U" $PROGRAM < $infile > $tempoutfile &
-  time_pid=$!
-  prog_pid=`pgrep -P $time_pid`
-  (sleep $TIMELIMIT; kill $prog_pid > /dev/null 2>&1) &
-  wait $time_pid > /dev/null 2>&1
-  time=`cat $tempfile | grep -o '[0-9]*\.[0-9]*'`
-  diff -q $outfile $tempoutfile > /dev/null
-  if [ $? -eq '0' ]; then
-    result=AC
-  else
-    result=WA
+infile=$IN_DIR/$file
+outfile=`echo $OUT_DIR/${file/.in/.out}`
+tempoutfile="$TMP_DIR/$file.tmp"
+tempfile=$TMP_DIR/tmp
+/usr/bin/time -o $tempfile -f "%U" $PROGRAM < $infile > $tempoutfile &
+time_pid=$!
+prog_pid=`pgrep -P $time_pid`
+(sleep $TIMELIMIT; kill $prog_pid > /dev/null 2>&1) &
+wait $time_pid > /dev/null 2>&1
+time=`cat $tempfile | grep -o '[0-9]*\.[0-9]*'`
+diff -q $outfile $tempoutfile > /dev/null
+if [ $? -eq '0' ]; then
+  result=0
+else
+  result=1
+fi
+if [[ $TIMELIMIT != 0 ]]; then
+  if [[ $TIMELIMIT < $time ]]; then
+    result=3
   fi
-  if [[ $TIMELIMIT != 0 ]]; then
-    if [[ $TIMELIMIT < $time ]]; then
-      result=TLE
-    fi
-  fi
-  if [[ $result != 'AC' ]]; then
+fi
+if [[ $3 == "" ]]; then
+  if [[ $result != 0 ]]; then
     red $result "$file - $time s"
   else
     green $result "$file - $time s"
-    ac_count=$[ $ac_count + 1 ]
   fi
-  if [[ $RESULT == 0 ]]; then
-    if [[ $result == WA ]]; then RESULT=1; fi
-    if [[ $result == TLE ]]; then RESULT=2; fi
-  fi
-done
-
-if [[ $ac_count == $test_count ]]; then
-  green "$ac_count/$test_count" $PROGRAM_NAME
-else
-  red "$ac_count/$test_count" $PROGRAM_NAME
 fi
 
-echo 
-
-# cleanup
-$CLEANUP
-
-exit $RESULT
+exit $result
