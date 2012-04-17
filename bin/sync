@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SOLUTIONS_DIR=solutions
+HOSTS=`cat conf/hosts.conf`
+HOSTS_COUNT=`echo $HOSTS | wc -w`
+
+source bin/common
+
+for host in $HOSTS; do
+  hostdir=`echo $host | sed 's/:.*//'`
+  mkdir -p $SOLUTIONS_DIR/$hostdir > /dev/null 2>&1
+  rsync -r "$host/" $SOLUTIONS_DIR/$hostdir
+  if [[ $? == 0 ]]; then
+    HOSTS_COUNT=$[ $HOSTS_COUNT - 1 ]
+    green "synced" $hostdir
+  else
+    red "fail" $hostdir
+  fi
+done
+
+exit $HOSTS_COUNT

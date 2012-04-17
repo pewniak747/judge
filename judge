@@ -1,7 +1,8 @@
 #!/bin/bash
 
-JUDGE=bin/judge
+JUDGE=bin/check
 COMPILE=bin/compile
+SYNC=bin/sync
 CLEANUP=bin/cleanup
 SOLUTIONS_DIR=solutions
 PROBLEMS_DIR=problems
@@ -18,10 +19,10 @@ fi
 
 HOSTS=`cat conf/hosts.conf`
 
+$SYNC
+
 for host in $HOSTS; do
   hostdir=`echo $host | sed 's/:.*//'`
-  mkdir -p $SOLUTIONS_DIR/$hostdir > /dev/null 2>&1
-  rsync -r "$host/" $SOLUTIONS_DIR/$hostdir
   echo [HOST] $hostdir
   for problem in $PROBLEMS; do
     IN_DIR="problems/$problem/in"
