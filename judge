@@ -1,14 +1,5 @@
 #!/bin/bash
 
-JUDGE=bin/judge
-CHECK=bin/check
-COMPILE=bin/compile
-SYNC=bin/sync
-REPORT=bin/report
-CLEANUP=bin/cleanup
-SOLUTIONS_DIR=solutions
-PROBLEMS_DIR=problems
-
 source bin/common
 
 HOSTS=`cat conf/hosts.conf`

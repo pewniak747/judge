@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# execs
+CHECK=bin/check
+CLEANUP=bin/cleanup
+COMPILE=bin/compile
+JUDGE=bin/judge
+REPORT=bin/report
+SYNC=bin/sync
+VERIFY=bin/verify
+
+# directories
+PROBLEMS_DIR=problems
+SOLUTIONS_DIR=solutions
+TMP_DIR=tmp
+
+# functions
 function red() {
   printf "\033[31m[$1]\033[0m\t$2\n"
 }

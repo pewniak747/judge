@@ -1,16 +1,9 @@
 #!/bin/bash
 
-CHECK=bin/check
-COMPILE=bin/compile
-VERIFY=bin/verify
-CLEANUP=bin/cleanup
-SOLUTIONS_DIR=solutions
-PROBLEMS_DIR=problems
-TMP_DIR=tmp
+source bin/common
+
 HOSTS=`cat conf/hosts.conf`
 PROBLEMS=`ls -v -m1 $PROBLEMS_DIR`
-
-source bin/common
 
 for host in $HOSTS; do
   hostdir=`echo $host | sed 's/:.*//'`

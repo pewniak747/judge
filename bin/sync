@@ -1,10 +1,9 @@
 #!/bin/bash
 
-SOLUTIONS_DIR=solutions
+source bin/common
+
 HOSTS=`cat conf/hosts.conf`
 HOSTS_COUNT=`echo $HOSTS | wc -w`
-
-source bin/common
 
 for host in $HOSTS; do
   hostdir=`echo $host | sed 's/:.*//'`

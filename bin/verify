@@ -1,11 +1,11 @@
 #!/bin/bash
 
+source bin/common
+
 SRC_FILE=$1
 PROGRAM_NAME=`basename $SRC_FILE .cpp`
 BLACKLIST_FILE=conf/blacklist.conf
 BLACKLIST=`cat $BLACKLIST_FILE`
-
-source bin/common
 
 if [ ! -e $SRC_FILE ]; then
   exit 1
