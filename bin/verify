@@ -7,10 +7,13 @@ BLACKLIST=`cat $BLACKLIST_FILE`
 
 source bin/common
 
+if [ ! -e $SRC_FILE ]; then
+  exit 1
+fi
+
 cat $BLACKLIST_FILE | while read taboo; do
   result=`grep -c "$taboo" $SRC_FILE`
   if [[ $result != "0" ]]; then
-    red "unacceptable expression: $taboo" $PROGRAM_NAME
     exit 1
   fi
 done

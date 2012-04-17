@@ -12,13 +12,6 @@ if [ ! -d $TMP_DIR ]; then
   mkdir $TMP_DIR
 fi
 
-if [ ! -e $SRC_FILE ]; then
-  red "source not found" $PROGRAM_NAME
-  exit 3
-fi
-
-$VERIFY $SRC_FILE
-
 if [[ $? == 0 ]]; then
   g++ -o $outfile $SRC_FILE > /dev/null 2>&1
 else

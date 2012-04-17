@@ -2,6 +2,7 @@
 
 CHECK=bin/check
 COMPILE=bin/compile
+VERIFY=bin/verify
 CLEANUP=bin/cleanup
 SOLUTIONS_DIR=solutions
 PROBLEMS_DIR=problems
@@ -30,26 +31,31 @@ for host in $HOSTS; do
     test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
     ac_count=0
 
-    $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
-    if [[ $? == 0 && -x "tmp/$problem" ]]; then
-      for input in $FILES; do
-        $CHECK $problem $input
-        result=$?
-        time=`cat $TMP_DIR/time`
-        timestats="$input - $time s"
-        if [[ $result == 0 ]]; then
-          green "AC" "$timestats"
-          ac_count=$[ $ac_count + 1 ]
-        else
-          if [[ $result == 3 ]]; then
-            red "TLE" "$timestats"
+    $VERIFY $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
+    if [[ $? == 0 ]]; then
+      $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
+      if [[ $? == 0 && -x "tmp/$problem" ]]; then
+        for input in $FILES; do
+          $CHECK $problem $input
+          result=$?
+          time=`cat $TMP_DIR/time`
+          timestats="$input - $time s"
+          if [[ $result == 0 ]]; then
+            green "AC" "$timestats"
+            ac_count=$[ $ac_count + 1 ]
           else
-            red "WA" "$timestats"
+            if [[ $result == 3 ]]; then
+              red "TLE" "$timestats"
+            else
+              red "WA" "$timestats"
+            fi
           fi
-        fi
-      done
+        done
+      else
+        red "CE" "$problem"
+      fi
     else
-      red "CE" "$problem"
+      red "UA" "$problem"
     fi
     white "$ac_count/$test_count" $problem
     # cleanup
