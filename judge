@@ -4,6 +4,7 @@ JUDGE=bin/judge
 CHECK=bin/check
 COMPILE=bin/compile
 SYNC=bin/sync
+REPORT=bin/report
 CLEANUP=bin/cleanup
 SOLUTIONS_DIR=solutions
 PROBLEMS_DIR=problems
@@ -19,7 +20,10 @@ if [[ $1 == "check" ]]; then
   $JUDGE
 fi
 if [[ $1 == "report" ]]; then
-  $REPORT
+  $SYNC > /dev/null 2>&1
+  if [[ $? == 0 ]]; then
+    $REPORT
+  fi
 fi
 if [[ $1 == "" ]]; then
   $SYNC
