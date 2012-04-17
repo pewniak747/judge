@@ -1,6 +1,7 @@
 #!/bin/bash
 
-JUDGE=bin/check
+JUDGE=bin/judge
+CHECK=bin/check
 COMPILE=bin/compile
 SYNC=bin/sync
 CLEANUP=bin/cleanup
@@ -9,40 +10,23 @@ PROBLEMS_DIR=problems
 
 source bin/common
 
-if [[ $PROBLEMS == "" ]]; then
-  PROBLEMS=$@
-fi
-
-if [[ $PROBLEMS == "" ]]; then
-  PROBLEMS=`ls -v -m1 $PROBLEMS_DIR`
-fi
-
 HOSTS=`cat conf/hosts.conf`
 
-$SYNC
+if [[ $1 == "sync" ]]; then
+  $SYNC
+fi
+if [[ $1 == "check" ]]; then
+  $JUDGE
+fi
+if [[ $1 == "report" ]]; then
+  $REPORT
+fi
+if [[ $1 == "" ]]; then
+  $SYNC
+  if [[ $? == 0 ]]; then
+    echo
+    $JUDGE
+  fi
+fi
 
-for host in $HOSTS; do
-  hostdir=`echo $host | sed 's/:.*//'`
-  echo [HOST] $hostdir
-  for problem in $PROBLEMS; do
-    IN_DIR="problems/$problem/in"
-    OUT_DIR="problems/$problem/out"
-    FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
-    test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
-    ac_count=0
-
-    $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
-    if [[ $? == 0 && -x "tmp/$problem" ]]; then
-      for input in $FILES; do
-        $JUDGE $problem $input
-        if [[ $? == 0 ]]; then
-          ac_count=$[ $ac_count + 1 ]
-        fi
-      done
-    fi
-    white "$ac_count/$test_count" $problem
-    # cleanup
-    $CLEANUP
-  done
-  echo
-done
+exit

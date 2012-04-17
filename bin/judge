@@ -1,0 +1,59 @@
+#!/bin/bash
+
+CHECK=bin/check
+COMPILE=bin/compile
+CLEANUP=bin/cleanup
+SOLUTIONS_DIR=solutions
+PROBLEMS_DIR=problems
+TMP_DIR=tmp
+HOSTS=`cat conf/hosts.conf`
+PROBLEMS=`ls -v -m1 $PROBLEMS_DIR`
+
+source bin/common
+
+for host in $HOSTS; do
+  hostdir=`echo $host | sed 's/:.*//'`
+  if [ ! -e $SOLUTIONS_DIR/$hostdir ]; then
+    echo not found solutions for $hostdir
+    echo please run judge sync
+    exit 1
+  fi
+done
+
+for host in $HOSTS; do
+  hostdir=`echo $host | sed 's/:.*//'`
+  echo [CHECKING] $hostdir
+  for problem in $PROBLEMS; do
+    IN_DIR="problems/$problem/in"
+    OUT_DIR="problems/$problem/out"
+    FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
+    test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
+    ac_count=0
+
+    $COMPILE $SOLUTIONS_DIR/$hostdir/$problem/$problem.cpp $problem
+    if [[ $? == 0 && -x "tmp/$problem" ]]; then
+      for input in $FILES; do
+        $CHECK $problem $input
+        result=$?
+        time=`cat $TMP_DIR/time`
+        timestats="$input - $time s"
+        if [[ $result == 0 ]]; then
+          green "AC" "$timestats"
+          ac_count=$[ $ac_count + 1 ]
+        else
+          if [[ $result == 3 ]]; then
+            red "TLE" "$timestats"
+          else
+            red "WA" "$timestats"
+          fi
+        fi
+      done
+    else
+      red "CE" "$problem"
+    fi
+    white "$ac_count/$test_count" $problem
+    # cleanup
+    $CLEANUP
+  done
+  echo
+done

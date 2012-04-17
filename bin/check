@@ -1,23 +1,19 @@
 #!/bin/bash
 
 TIMELIMIT=1
-FILES=""
-RESULT=0
 TMP_DIR=tmp
 PROGRAM_NAME=$1
+FILE=$2
 PROGRAM_DIR="problems/$PROGRAM_NAME"
 PROGRAM="$TMP_DIR/$PROGRAM_NAME"
 IN_DIR="$PROGRAM_DIR/in"
 OUT_DIR="$PROGRAM_DIR/out"
-CLEANUP=bin/cleanup
-file=$2
 
-source bin/common
 source $PROGRAM_DIR/$PROGRAM_NAME.conf
 
-infile=$IN_DIR/$file
-outfile=`echo $OUT_DIR/${file/.in/.out}`
-tempoutfile="$TMP_DIR/$file.tmp"
+infile=$IN_DIR/$FILE
+outfile=`echo $OUT_DIR/${FILE/.in/.out}`
+tempoutfile="$TMP_DIR/$FILE.tmp"
 tempfile=$TMP_DIR/tmp
 /usr/bin/time -o $tempfile -f "%U" $PROGRAM < $infile > $tempoutfile &
 time_pid=$!
@@ -36,16 +32,6 @@ if [[ $TIMELIMIT != 0 ]]; then
     result=3
   fi
 fi
-if [[ $3 == "" ]]; then
-  if [[ $result == 0 ]]; then
-    green "AC" "$file - $time s"
-  else
-    if [[ $result == 3 ]]; then
-      red "TLE" "$file - $time s"
-    else
-      red "WA" "$file - $time s"
-    fi
-  fi
-fi
+echo $time > $TMP_DIR/time
 
 exit $result
