@@ -21,12 +21,19 @@ for host in $HOSTS; do
   fi
 done
 
+MAX_POINTS=0
+for problem in $PROBLEMS; do
+  tests=`ls $PROBLEMS_DIR/$problem/in/$problem*.in | wc -l`
+  MAX_POINTS=$[ $MAX_POINTS + $tests]
+done
+
 for host in $HOSTS; do
   hostdir=`echo $host | sed 's/:.*//'`
   echo [CHECKING] $hostdir
+  points=0
   for problem in $PROBLEMS; do
-    IN_DIR="problems/$problem/in"
-    OUT_DIR="problems/$problem/out"
+    IN_DIR="$PROBLEMS_DIR/$problem/in"
+    OUT_DIR="$PROBLEMS_DIR/$problem/out"
     FILES=`ls -v -m1 $IN_DIR/$PROGRAM_NAME*.in | xargs -n 1 basename`
     test_count=`ls $IN_DIR/$PROGRAM_NAME*.in | wc -l`
     ac_count=0
@@ -55,8 +62,10 @@ for host in $HOSTS; do
       red "UA" "$problem"
     fi
     white "$ac_count/$test_count" $problem
+    points=$[ $points + $ac_count ]
     # cleanup
     $CLEANUP
   done
+  white "TOTAL" "$points/$MAX_POINTS"
   echo
 done
