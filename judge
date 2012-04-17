@@ -11,10 +11,7 @@ if [[ $1 == "check" ]]; then
   $JUDGE
 fi
 if [[ $1 == "report" ]]; then
-  $SYNC > /dev/null 2>&1
-  if [[ $? == 0 ]]; then
-    $REPORT
-  fi
+  $REPORT
 fi
 if [[ $1 == "" ]]; then
   $SYNC
