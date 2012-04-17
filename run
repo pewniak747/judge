@@ -39,11 +39,7 @@ for host in $HOSTS; do
         fi
       done
     fi
-    if [[ $ac_count == $test_count ]]; then
-      green "$ac_count/$test_count" $problem
-    else
-      red "$ac_count/$test_count" $problem
-    fi
+    white "$ac_count/$test_count" $problem
     # cleanup
     $CLEANUP
   done

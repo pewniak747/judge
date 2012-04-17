@@ -37,10 +37,14 @@ if [[ $TIMELIMIT != 0 ]]; then
   fi
 fi
 if [[ $3 == "" ]]; then
-  if [[ $result != 0 ]]; then
-    red $result "$file - $time s"
+  if [[ $result == 0 ]]; then
+    green "AC" "$file - $time s"
   else
-    green $result "$file - $time s"
+    if [[ $result == 3 ]]; then
+      red "TLE" "$file - $time s"
+    else
+      red "WA" "$file - $time s"
+    fi
   fi
 fi
 

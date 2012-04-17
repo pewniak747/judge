@@ -7,3 +7,7 @@ function red() {
 function green() {
   printf "\033[32m[$1]\033[0m\t$2\n"
 }
+
+function white() {
+  printf "[$1]\t$2\n"
+}
