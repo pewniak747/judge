@@ -11,6 +11,7 @@ OUT_DIR="$PROGRAM_DIR/out"
 
 source $PROGRAM_DIR/$PROGRAM_NAME.conf
 
+touch $TMP_DIR/time
 infile=$IN_DIR/$FILE
 outfile=`echo $OUT_DIR/${FILE/.in/.out}`
 tempoutfile="$TMP_DIR/$FILE.tmp"
@@ -20,18 +21,18 @@ time_pid=$!
 prog_pid=`pgrep -P $time_pid`
 (sleep $TIMELIMIT; kill $prog_pid > /dev/null 2>&1) &
 wait $time_pid > /dev/null 2>&1
+exitstatus=$?
 time=`cat $tempfile | grep -o '[0-9]*\.[0-9]*'`
-diff -q $outfile $tempoutfile > /dev/null
-if [ $? -eq '0' ]; then
-  result=0
-else
-  result=1
-fi
+echo $time > $TMP_DIR/time
 if [[ $TIMELIMIT != 0 ]]; then
   if [[ $TIMELIMIT < $time ]]; then
-    result=3
+    exit 3 # time limit exceeded
   fi
 fi
-echo $time > $TMP_DIR/time
-
-exit $result
+if [[ $exitstatus != 0 ]]; then
+  exit 2 # runtime error
+fi
+diff -q $outfile $tempoutfile > /dev/null
+if [[ $? != 0 ]]; then
+  exit 1 # wrong answer
+fi
